@@ -10,9 +10,9 @@ app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
 # Load model and label encoder
-model = load_model('saved_model_fix.keras')
+model = load_model('saved_model_new.keras')
 label_encoder = LabelEncoder()
-label_encoder.classes_ = np.load('classes_fix.npy')
+label_encoder.classes_ = np.load('classes_new.npy')
 
 def preprocess_image(img_path):
     try:
