@@ -96,9 +96,14 @@ history_finetune = model.fit(
 loss, accuracy = model.evaluate(val_generator)
 print(f"[RESULT] Test Accuracy: {accuracy * 100:.2f}%")
 
-model.save('saved_model_new1.keras')
+model.save('saved_model_new.keras')
 print("[INFO] Model saved as 'saved_model.keras'")
 
 print(model.summary())
 
-
+if __name__ == "__main__":
+    import os
+    port = int(os.environ.get('PORT', 5000))
+    print(f"[INFO] Running model script on port {port}...")
+    # Kamu bisa panggil fungsi training di sini kalau mau modular
+    # Tapi kalau sudah otomatis jalan dari atas, cukup print saja
