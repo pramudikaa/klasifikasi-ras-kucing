@@ -1,2 +1,2 @@
 [pkgs]
-libGL = "libgl1"
+libGL = "libgl1-mesa-glx"
