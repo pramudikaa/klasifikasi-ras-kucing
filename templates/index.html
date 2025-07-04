@@ -1,156 +1,443 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ras Kucing</title>
+    <title>Klasifikasi Ras Kucing AI</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <script>
+      // Dark mode toggle
+      function toggleTheme() {
+        const html = document.documentElement;
+        if (html.getAttribute('data-theme') === 'dark') {
+          html.setAttribute('data-theme', 'light');
+          localStorage.setItem('theme', 'light');
+        } else {
+          html.setAttribute('data-theme', 'dark');
+          localStorage.setItem('theme', 'dark');
+        }
+        setThemeIcon();
+      }
+      function setThemeIcon() {
+        const html = document.documentElement;
+        document.getElementById('theme-icon').textContent = html.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
+      }
+      // On load, set theme from localStorage
+      window.onload = function() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        setThemeIcon();
+      }
+    </script>
+    <style>
+      html, body {
+        transition: background 0.5s, color 0.5s;
+      }
+      [data-theme="dark"] {
+        background-color: #18181b !important;
+        color: #f3f4f6 !important;
+      }
+      [data-theme="dark"] .glass {
+        background: rgba(36, 37, 46, 0.85) !important;
+        box-shadow: 0 8px 32px 0 rgba(0,0,0,0.37);
+        border: 1px solid rgba(55,65,81,0.18);
+      }
+      [data-theme="dark"] .bg-white {
+        background-color: #23232b !important;
+      }
+      [data-theme="dark"] .bg-gradient-to-br,
+      [data-theme="dark"] .bg-gradient-to-r {
+        background: linear-gradient(135deg, #23232b 0%, #18181b 100%) !important;
+      }
+      [data-theme="dark"] .text-gray-700,
+      [data-theme="dark"] .text-gray-800,
+      [data-theme="dark"] .text-gray-600 {
+        color: #d1d5db !important;
+      }
+      [data-theme="dark"] .border-gray-300 {
+        border-color: #444654 !important;
+      }
+      [data-theme="dark"] .border-blue-200 {
+        border-color: #6366f1 !important;
+      }
+      [data-theme="dark"] .shadow-lg {
+        box-shadow: 0 8px 32px 0 rgba(0,0,0,0.37) !important;
+      }
+      [data-theme="dark"] input,
+      [data-theme="dark"] textarea {
+        background-color: #23232b !important;
+        color: #f3f4f6 !important;
+        border-color: #444654 !important;
+      }
+      [data-theme="dark"] input:focus,
+      [data-theme="dark"] textarea:focus {
+        border-color: #6366f1 !important;
+        outline: none !important;
+      }
+      [data-theme="dark"] .bg-gray-200 {
+        background-color: #23232b !important;
+      }
+      [data-theme="dark"] .bg-gray-700 {
+        background-color: #23232b !important;
+      }
+      [data-theme="dark"] .bg-blue-500,
+      [data-theme="dark"] .bg-gradient-to-r {
+        background: linear-gradient(90deg, #6366f1 0%, #a78bfa 100%) !important;
+      }
+      [data-theme="dark"] .hover\:from-blue-600:hover,
+      [data-theme="dark"] .hover\:to-purple-600:hover {
+        background: linear-gradient(90deg, #818cf8 0%, #c4b5fd 100%) !important;
+      }
+      [data-theme="dark"] .border-blue-800 {
+        border-color: #6366f1 !important;
+      }
+      [data-theme="dark"] .dark\:text-blue-300 {
+        color: #a5b4fc !important;
+      }
+      [data-theme="dark"] .dark\:text-purple-300 {
+        color: #c4b5fd !important;
+      }
+      [data-theme="dark"] .dark\:bg-gray-800 {
+        background-color: #23232b !important;
+      }
+      [data-theme="dark"] .dark\:bg-gray-900 {
+        background-color: #18181b !important;
+      }
+      [data-theme="dark"] .dark\:border-gray-700 {
+        border-color: #444654 !important;
+      }
+      [data-theme="dark"] .dark\:bg-blue-800 {
+        background-color: #6366f1 !important;
+      }
+      /* Tambahan: Navbar link putih di dark mode */
+      [data-theme="dark"] .nav-link {
+        color: #fff !important;
+      }
+      /* Tambahan: Judul hero section agar selalu terlihat */
+      .hero-title {
+        background: linear-gradient(270deg, #2563eb, #a21caf, #6366f1, #a21caf, #2563eb);
+        background-size: 400% 400%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        animation: gradientMove 12s ease-in-out infinite;
+      }
+      @keyframes gradientMove {
+        0% {background-position:0% 50%}
+        50% {background-position:100% 50%}
+        100% {background-position:0% 50%}
+      }
+      [data-theme="light"] .hero-title {
+        text-shadow: 0 2px 8px rgba(0,0,0,0.10);
+      }
+      [data-theme="dark"] .hero-title {
+        text-shadow: 0 2px 16px rgba(0,0,0,0.50);
+      }
+      .glass {
+        background: rgba(255,255,255,0.15);
+        box-shadow: 0 8px 32px 0 rgba(31,38,135,0.37);
+        backdrop-filter: blur(8px);
+        border-radius: 16px;
+        border: 1px solid rgba(255,255,255,0.18);
+        transition: background 0.5s, box-shadow 0.5s;
+      }
+      .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: auto;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg);}
+        100% { transform: rotate(360deg);}
+      }
+      .nav-link,
+      .nav-link:visited,
+      .nav-link:hover {
+        color: #fff !important;
+        transition: color 0.3s;
+      }
+      [data-theme="dark"] .nav-link,
+      [data-theme="dark"] .nav-link:visited,
+      [data-theme="dark"] .nav-link:hover {
+        color: #fff !important;
+      }
+      /* Animated gradient for buttons and cards */
+      .animated-gradient {
+        background: linear-gradient(270deg, #2563eb, #a21caf, #6366f1, #a21caf, #2563eb);
+        background-size: 400% 400%;
+        animation: gradientMove 12s ease-in-out infinite;
+        color: #fff !important;
+        border: none;
+        transition: filter 0.3s;
+      }
+      .animated-gradient:hover {
+        filter: brightness(1.1);
+      }
+      /* For card borders or backgrounds if needed */
+      .animated-border {
+        border-image: linear-gradient(270deg, #2563eb, #a21caf, #db2777, #2563eb) 1;
+        border-width: 2px;
+        border-style: solid;
+        animation: gradientMove 5s ease-in-out infinite;
+      }
+    </style>
 </head>
-<body class="bg-gray-100">
+<body class="min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-500">
 
-  <!-- Header -->
-<header class="bg-cover bg-center py-6" style="background-image: url('../static/images/gambar2.jpg')">
-    <div class="container mx-auto px-4">
-      <h1 class="text-2xl font-bold text-white">Klasifikasi Ras Kucing</h1>
-     <!-- Navigasi -->
-<nav class="mt-2">
-    <ul class="flex space-x-4">
-      <li><a href="#" class="text-gray-900 hover:text-white">Beranda</a></li>
-      <li><a href="#" class="text-gray-900 hover:text-white">Tentang</a></li>
-      <li><a href="#" class="text-gray-900 hover:text-white">Ras Kucing</a></li>
-      <li><a href="#" class="text-gray-900 hover:text-white">Artikel</a></li>
-      <li><a href="#" class="text-gray-900 hover:text-white">Kontak</a></li>
-    </ul>
+  <!-- Navbar -->
+  <nav class="flex items-center justify-between px-8 py-4 bg-white/80 dark:bg-gray-900/80 shadow-lg fixed w-full z-10 backdrop-blur-md">
+    <div class="flex items-center space-x-3">
+      <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="Logo" class="w-10 h-10 rounded-full shadow-md">
+      <span class="font-bold text-xl tracking-wide text-blue-700 dark:text-blue-300">Klasifikasi Ras Kucing</span>
+    </div>
+    <div class="flex items-center space-x-6">
+      <a href="#" class="nav-link font-semibold transition">Beranda</a>
+      <a href="#about" class="nav-link font-semibold transition">Tentang</a>
+      <a href="#breeds" class="nav-link font-semibold transition">Ras Kucing</a>
+      <a href="#contact" class="nav-link font-semibold transition">Kontak</a>
+      <button onclick="toggleTheme()" class="ml-4 px-3 py-1 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-200 dark:hover:bg-blue-800 transition">
+        <span id="theme-icon">🌙</span>
+      </button>
+    </div>
   </nav>
-  
-    </div>
-  </header>
 
-  <!-- Banner Utama -->
-<section class="bg-gradient-to-r from-green-400 to-blue-500 py-20 text-center">
-  <div class="container">
-    <div class="container mx-auto px-4">
-        <h2 class="text-2xl font-bold mb-4">Upload Gambar Kucing</h2>
-        <form action="/" method="post" enctype="multipart/form-data" class="flex flex-col items-center">
-            <input type="file" name="file" id="file" class="py-2 px-4 border border-gray-300 rounded-md mb-4">
-            <button type="submit" class="py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">Upload and Predict</button>
-        </form>
-    </div>
-    
-    {% if label %}
-    <div class="flex flex-col items-center">
-        <h2 class="mb-4 font-bold">Predicted Label: {{ label }}</h2>
-        <img src="{{ url_for('static', filename='uploads/' + img_filename) }}" alt="Uploaded Image" class="mx-auto">
-    </div>
-{% endif %}
-
-</section>
-
-
-  <!-- Bagian Klasifikasi Ras Kucing -->
-  <section class="py-16">
-    <div class="container mx-auto px-4">
-      <h2 class="text-2xl font-bold text-gray-800 mb-8">Contoh Ras Kucing</h2>
-      <!-- Kontainer dengan scroll horizontal -->
-      <div class="scroll-container flex overflow-x-auto space-x-4 w-full">
-       <!-- Item ras kucing -->
-       <div class="bg-white rounded-lg shadow-md overflow-hidden flex-shrink-0 w-80">
-        <img src="../static/images/gambar3.jpg" alt="Ras Kucing 1" class="w-full h-64  object-cover object-center">
-        <div class="p-4">
-          <h3 class="text-lg font-semibold text-gray-800">Persian</h3>
-          <p class="text-gray-600">Berasal dari Iran dan telah menjadi sangat populer di seluruh dunia, terutama karena bulu panjang dan wajah datarnya yang khas.</p>
-          <a href="#" class="block mt-2 text-blue-500 hover:text-blue-600">Pelajari lebih lanjut</a>
-        </div>
-      </div>
-      <!-- Item ras kucing lainnya -->
-      <div class="bg-white rounded-lg shadow-md overflow-hidden flex-shrink-0 w-80">
-        <img src="../static/images/gambar4.jpg" alt="Ras Kucing 2" class="w-full h-64 object-cover object-center">
-        <div class="p-4">
-          <h3 class="text-lg font-semibold text-gray-800">Munchkin</h3>
-          <p class="text-gray-600">Berasal dari Amerika Serikat,  Kucing ini mendapatkan namanya dan popularitasnya pada tahun 1990-an. Meskipun mutasi genetik yang menghasilkan kaki pendek telah ada di berbagai belahan dunia.</p>
-          <a href="#" class="block mt-2 text-blue-500 hover:text-blue-600">Pelajari lebih lanjut</a>
-        </div>
-      </div>
-      <!-- Item ras kucing lainnya -->
-      <div class="bg-white rounded-lg shadow-md overflow-hidden flex-shrink-0 w-80">
-        <img src="../static/images/gambar5.jpg" alt="Ras Kucing 3" class="w-full h-64 object-cover object-center">
-        <div class="p-4">
-          <h3 class="text-lg font-semibold text-gray-800">Abyissian</h3>
-          <p class="text-gray-600">Berasal dari Abyssinia sekarang Ethiopia, Kucing ini diyakini sebagai salah satu ras kucing domestik tertua.</p>
-          <a href="#" class="block mt-2 text-blue-500 hover:text-blue-600">Pelajari lebih lanjut</a>
-        </div>
-      </div>
-      <!-- Item ras kucing lainnya -->
-      <div class="bg-white rounded-lg shadow-md overflow-hidden flex-shrink-0 w-80">
-        <img src="../static/images/gambar6.jpg" alt="Ras Kucing 4" class="w-full h-64 object-cover object-center">
-        <div class="p-4">
-          <h3 class="text-lg font-semibold text-gray-800">Bengal</h3>
-          <p class="text-gray-600">Berasal dari Amerika Serikat, Ras ini diciptakan pada tahun 1970-an dengan mengawinkan kucing domestik dengan kucing macan tutul Asia. Hasilnya adalah kucing dengan pola bulu seperti macan tutul yang eksotis.</p>
-          <a href="#" class="block mt-2 text-blue-500 hover:text-blue-600">Pelajari lebih lanjut</a>
-        </div>
-      </div>
-      <!-- Item ras kucing lainnya -->
-      <div class="bg-white rounded-lg shadow-md overflow-hidden flex-shrink-0 w-80">
-        <img src="../static/images/gambar7.jpeg" alt="Ras Kucing 5" class="w-full h-64 object-cover object-center">
-        <div class="p-4">
-          <h3 class="text-lg font-semibold text-gray-800">Birman</h3>
-          <p class="text-gray-600">Berasal dari Myanmar, Kucing ini pertama kali diperkenalkan ke Prancis pada awal abad ke-20. Mereka dikenal karena bulu semi-panjang dan mata birunya yang mencolok.</p>
-          <a href="#" class="block mt-2 text-blue-500 hover:text-blue-600">Pelajari lebih lanjut</a>
-        </div>
-      </div>
-      <!-- Item ras kucing lainnya -->
-      <div class="bg-white rounded-lg shadow-md overflow-hidden flex-shrink-0 w-80">
-        <img src="../static/images/gambar9.jpeg" alt="Ras Kucing 6" class="w-full h-64 object-cover object-center">
-        <div class="p-4">
-          <h3 class="text-lg font-semibold text-gray-800">British Shorthair</h3>
-          <p class="text-gray-600">Berasal dari Inggris, Salah satu ras kucing domestik tertua di Inggris. British Shorthair, telah ada selama berabad-abad. Mereka dikenal karena tubuh kekar dan bulu pendek yang tebal.</p>
-          <a href="#" class="block mt-2 text-blue-500 hover:text-blue-600">Pelajari lebih lanjut</a>
-        </div>
-      </div>
-      <!-- Item ras kucing lainnya -->
-      <div class="bg-white rounded-lg shadow-md overflow-hidden flex-shrink-0 w-80">
-        <img src="../static/images/gambar10.jpeg" alt="Ras Kucing 6" class="w-full h-64 object-cover object-center">
-        <div class="p-4">
-          <h3 class="text-lg font-semibold text-gray-800">Egyptian Mau</h3>
-          <p class="text-gray-600">Berasal dari Mesir, Kucing ini memiliki sejarah panjang yang dapat ditelusuri kembali ke zaman Mesir Kuno. Mereka dikenal karena bulu mereka yang bertutul alami.</p>
-          <a href="#" class="block mt-2 text-blue-500 hover:text-blue-600">Pelajari lebih lanjut</a>
-        </div>
-      </div>
-      <!-- Item ras kucing lainnya -->
-      <div class="bg-white rounded-lg shadow-md overflow-hidden flex-shrink-0 w-80">
-        <img src="../static/images/gambar11.jpg" alt="Ras Kucing 6" class="w-full h-64 object-cover object-center">
-        <div class="p-4">
-          <h3 class="text-lg font-semibold text-gray-800">Maine Coon</h3>
-          <p class="text-gray-600">Berasal dari Amerika Serikat, khususnya di negara bagian Maine. Salah satu ras kucing domestik terbesar, Mereka dikenal karena bulu panjang dan ekor lebat mereka.</p>
-          <a href="#" class="block mt-2 text-blue-500 hover:text-blue-600">Pelajari lebih lanjut</a>
-        </div>
-      </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- Bagian Tentang Kami -->
-  <section class="bg-gray-100 py-16">
-    <div class="container mx-auto px-4">
-      <h2 class="text-2xl font-bold text-gray-800 mb-8">Tentang Kami</h2>
-      <p class="text-gray-600">Kami berkomitmen untuk menjadi sumber pengetahuan terpercaya bagi pecinta kucing, membantu Anda memahami karakteristik, kebutuhan, dan sejarah dari setiap ras kucing.</p>
-    </div>
-  </section>
-
-  <!-- Bagian Kontak -->
-  <section class="py-16 bg-gray-200">
-    <div class="container mx-auto px-4">
-      <h2 class="text-2xl font-bold text-gray-800 mb-8">Kontak</h2>
-      <p class="text-gray-600">Jika Anda memiliki pertanyaan, saran, atau masukan, Anda dapat mengirimkan email kepada kami</p>
-      <!-- Formulir kontak -->
-      <form class="mt-8">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <input type="text" placeholder="Nama Anda" class="w-full bg-white border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:border-blue-500">
-          <input type="email" placeholder="Email Anda" class="w-full bg-white border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:border-blue-500">
-        </div>
-        <textarea class="w-full mt-4 bg-white border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:border-blue-500" rows="6" placeholder="Pesan Anda"></textarea>
-        <button type="submit" class="mt-4 bg-blue-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Kirim Pesan</button>
+  <!-- Hero Section -->
+  <section class="flex flex-col items-center justify-center pt-32 pb-16 text-center">
+    <h1 class="text-4xl md:text-5xl font-extrabold mb-4 hero-title">
+      AI Klasifikasi Ras Kucing
+    </h1>
+    <p class="text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+      Upload gambar kucingmu dan temukan rasnya secara otomatis dengan teknologi AI modern!
+    </p>
+    <div class="glass p-8 shadow-xl w-full max-w-lg mx-auto">
+      <form action="/" method="post" enctype="multipart/form-data" class="flex flex-col items-center space-y-4" id="upload-form">
+        <input type="file" name="file" id="file" accept="image/*" class="py-2 px-4 border border-gray-300 rounded-md w-full bg-white dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition">
+        <button type="submit" class="py-2 px-6 animated-gradient font-semibold rounded-lg shadow-md transition-all duration-200 flex items-center space-x-2">
+          <span>Upload &amp; Prediksi</span>
+          <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+        </button>
+        <div id="spinner" class="hidden spinner"></div>
       </form>
-   
+      {% if label %}
+      <div class="mt-8 flex flex-col items-center">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 w-full max-w-md animate-fade-in-up">
+          <h2 class="text-xl font-bold text-blue-700 dark:text-blue-300 mb-2">Hasil Prediksi</h2>
+          <div class="flex flex-col items-center">
+            <img src="{{ url_for('static', filename='uploads/' + img_filename) }}" alt="Uploaded Cat" class="w-48 h-48 object-cover rounded-lg shadow-md border-4 border-blue-200 dark:border-blue-800 mb-4">
+            <span class="text-2xl font-semibold text-purple-700 dark:text-purple-300">{{ label }}</span>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- Ras Kucing Section -->
+  <section id="breeds" class="py-16 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4 text-center " style="font-size:2.2rem;">
+        Contoh Ras Kucing
+      </h2>
+      <p class="text-center text-gray-700 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+        Berikut adalah beberapa ras kucing populer di dunia beserta ciri khas dan tips penanganannya. Klik <b>Lihat Selengkapnya</b> untuk info detail tiap ras.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        {% set breeds = [
+          {
+            'img': 'Abyssinian.jpg',
+            'name': 'Abyssinian',
+            'desc': 'Kucing aktif, cerdas, dan suka memanjat.',
+            'asal': 'Ethiopia (Abyssinia)',
+            'ciri': 'Bulu pendek, warna coklat kemerahan, tubuh ramping, telinga besar.',
+            'penanganan': 'Sediakan tempat panjat, ajak bermain rutin, rawat bulu seminggu sekali.'
+          },
+          {
+            'img': 'Bengal.jpg',
+            'name': 'Bengal',
+            'desc': 'Bulu bermotif tutul seperti macan tutul.',
+            'asal': 'Amerika Serikat',
+            'ciri': 'Bulu pendek, motif tutul/roset, tubuh atletis, energik.',
+            'penanganan': 'Ajak olahraga, beri mainan interaktif, mandikan jika perlu.'
+          },
+          {
+            'img': 'Birman.jpg',
+            'name': 'Birman',
+            'desc': 'Bulu semi-panjang, mata biru, kaki putih.',
+            'asal': 'Myanmar (Birma)',
+            'ciri': 'Bulu lembut, warna point, mata biru, kaki putih.',
+            'penanganan': 'Sisir bulu 2-3x seminggu, cek kesehatan mata dan telinga.'
+          },
+          {
+            'img': 'Bombay.jpg',
+            'name': 'Bombay',
+            'desc': 'Bulu hitam pekat, mirip mini panther.',
+            'asal': 'Amerika Serikat',
+            'ciri': 'Bulu hitam pendek, mata kuning/tembaga, tubuh kekar.',
+            'penanganan': 'Rawat bulu seminggu sekali, ajak bermain, cek kesehatan gigi.'
+          },
+          {
+            'img': 'British_shorthair.jpg',
+            'name': 'British Shorthair',
+            'desc': 'Tubuh kekar, bulu pendek tebal.',
+            'asal': 'Inggris',
+            'ciri': 'Bulu sangat tebal, pipi bulat, mata besar, tubuh besar.',
+            'penanganan': 'Sisir bulu seminggu sekali, kontrol berat badan, cek gigi.'
+          },
+          {
+            'img': 'Egyptian_mau.jpg',
+            'name': 'Egyptian Mau',
+            'desc': 'Kucing bertutul alami, sangat cepat.',
+            'asal': 'Mesir',
+            'ciri': 'Bulu bertutul, tubuh ramping, kaki panjang.',
+            'penanganan': 'Sediakan ruang lari, ajak bermain aktif, cek sendi.'
+          },
+          {
+            'img': 'Maine_coon.jpg',
+            'name': 'Maine Coon',
+            'desc': 'Ras terbesar, bulu panjang, ekor lebat.',
+            'asal': 'Amerika Serikat',
+            'ciri': 'Bulu panjang, ekor besar, tubuh besar, ramah.',
+            'penanganan': 'Sisir bulu rutin, cek kesehatan sendi, makanan tinggi protein.'
+          },
+          {
+            'img': 'Persian.jpg',
+            'name': 'Persian',
+            'desc': 'Bulu panjang, wajah datar, populer.',
+            'asal': 'Iran (Persia)',
+            'ciri': 'Bulu sangat panjang, wajah pesek, mata besar.',
+            'penanganan': 'Sisir bulu setiap hari, bersihkan mata & hidung, mandikan rutin.'
+          },
+          {
+            'img': 'Ragdoll.jpg',
+            'name': 'Ragdoll',
+            'desc': 'Bulu semi-panjang, sangat jinak.',
+            'asal': 'Amerika Serikat',
+            'ciri': 'Bulu lembut, mata biru, tubuh besar, jinak.',
+            'penanganan': 'Sisir bulu 2x seminggu, ajak bermain lembut, cek kesehatan rutin.'
+          },
+          {
+            'img': 'Russian_blue.jpg',
+            'name': 'Russian Blue',
+            'desc': 'Bulu abu-abu kebiruan, elegan.',
+            'asal': 'Rusia',
+            'ciri': 'Bulu pendek biru keperakan, mata hijau, tubuh ramping.',
+            'penanganan': 'Rawat bulu seminggu sekali, ajak bermain, lingkungan tenang.'
+          },
+          {
+            'img': 'Siamese.jpg',
+            'name': 'Siamese',
+            'desc': 'Bersuara nyaring, bulu point, sangat sosial.',
+            'asal': 'Thailand',
+            'ciri': 'Bulu pendek, warna point, mata biru, tubuh ramping.',
+            'penanganan': 'Ajak bicara, beri perhatian, rawat bulu seminggu sekali.'
+          },
+          {
+            'img': 'Sphynx.jpg',
+            'name': 'Sphynx',
+            'desc': 'Tidak berbulu, kulit keriput.',
+            'asal': 'Kanada',
+            'ciri': 'Tidak berbulu, kulit hangat, telinga besar.',
+            'penanganan': 'Mandikan rutin, bersihkan telinga, jaga suhu tubuh.'
+          }
+        ] %}
+        {% for breed in breeds %}
+        <div class="glass p-4 rounded-xl shadow-lg flex flex-col items-center hover:scale-105 transition-transform duration-300 animated-border">
+          <img src="{{ url_for('static', filename='images/' + breed.img) }}" alt="{{ breed.name }}" class="w-36 h-36 object-cover rounded-lg mb-3 shadow-md">
+          <h3 class="text-lg font-semibold text-blue-700 dark:text-blue-300">{{ breed.name }}</h3>
+          <p class="text-gray-600 dark:text-gray-300 text-center mb-2">{{ breed.desc }}</p>
+          <button onclick="showModal({{ loop.index0 }})" class="mt-2 px-4 py-2 animated-gradient rounded-lg font-semibold shadow transition-all duration-200">
+            Lihat Selengkapnya
+          </button>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Modal Popups -->
+    {% for breed in breeds %}
+    <div id="modal-{{ loop.index0 }}" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+      <div class="bg-white dark:bg-gray-900 rounded-xl shadow-2xl max-w-lg w-full p-8 relative animate-fade-in-up">
+        <button onclick="hideModal({{ loop.index0 }})" class="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
+        <h3 class="text-2xl font-bold text-blue-700 dark:text-blue-300 mb-2">{{ breed.name }}</h3>
+        <img src="{{ url_for('static', filename='images/' + breed.img) }}" alt="{{ breed.name }}" class="w-32 h-32 object-cover rounded-lg mb-4 shadow-md mx-auto">
+        <ul class="mb-4 text-gray-700 dark:text-gray-200 text-left space-y-2">
+          <li><b>Asal:</b> {{ breed.asal }}</li>
+          <li><b>Ciri-ciri:</b> {{ breed.ciri }}</li>
+          <li><b>Cara Penanganan:</b> {{ breed.penanganan }}</li>
+        </ul>
+        <div class="flex justify-end">
+          <button onclick="hideModal({{ loop.index0 }})" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-200">Tutup</button>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </section>
+
+  <!-- Tentang Kami -->
+  <section id="about" class="py-16 bg-white dark:bg-gray-900">
+    <div class="container mx-auto px-4 max-w-3xl text-center">
+      <h2 class="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-6">Tentang klasifikasi Ras Kucing</h2>
+      <p class="text-gray-700 dark:text-gray-300 text-lg">
+        klasifikasi Ras Kucing adalah platform berbasis kecerdasan buatan untuk mengenali berbagai ras kucing dari gambar. Kami berkomitmen memberikan pengalaman terbaik bagi pecinta kucing dan komunitas AI di Indonesia.
+      </p>
+    </div>
+  </section>
+
+  <!-- Kontak -->
+  <section id="contact" class="py-16 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-gray-900 dark:to-gray-800">
+    <div class="container mx-auto px-4 max-w-2xl">
+      <h2 class="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-6 text-center">Kontak Kami</h2>
+      <form class="glass p-8 rounded-xl shadow-lg flex flex-col space-y-4">
+        <input type="text" placeholder="Nama Anda" class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-lg focus:outline-none focus:border-blue-500">
+        <input type="email" placeholder="Email Anda" class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-lg focus:outline-none focus:border-blue-500">
+        <textarea class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-lg focus:outline-none focus:border-blue-500" rows="5" placeholder="Pesan Anda"></textarea>
+        <button type="submit" class="animated-gradient text-white px-6 py-3 rounded-lg font-semibold focus:outline-none shadow hover:from-blue-600 hover:to-purple-600 transition-all duration-200">
+          Kirim Pesan
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="py-6 text-center text-gray-500 dark:text-gray-400 text-sm">
+    &copy; {{ year or 2025 }} Klasifikasi Ras Kucing. Powered by CNN & Flask.
+  </footer>
+
+  <script>
+    // Spinner saat upload
+    document.getElementById('upload-form').addEventListener('submit', function() {
+      document.getElementById('spinner').classList.remove('hidden');
+    });
+    // Dark mode icon
+    document.querySelector('button[onclick="toggleTheme()"]').addEventListener('click', setThemeIcon);
+
+    function showModal(idx) {
+      document.getElementById('modal-' + idx).classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+    function hideModal(idx) {
+      document.getElementById('modal-' + idx).classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+    // Optional: close modal on ESC
+    document.addEventListener('keydown', function(e) {
+      if (e.key === "Escape") {
+        document.querySelectorAll('[id^="modal-"]').forEach(function(modal) {
+          modal.classList.add('hidden');
+          document.body.classList.remove('overflow-hidden');
+        });
+      }
+    });
+  </script>
+</body>
+</html>
+
