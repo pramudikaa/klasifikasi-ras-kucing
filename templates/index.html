@@ -200,16 +200,42 @@
       <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="Logo" class="w-10 h-10 rounded-full shadow-md">
       <span class="font-bold text-xl tracking-wide text-blue-700 dark:text-blue-300">Klasifikasi Ras Kucing</span>
     </div>
-    <div class="flex items-center space-x-6">
+    <!-- Desktop Navbar -->
+    <div class="hidden md:flex items-center space-x-6">
       <a href="#" class="nav-link font-semibold transition">Beranda</a>
-      <a href="#about" class="nav-link font-semibold transition">Tentang</a>
       <a href="#breeds" class="nav-link font-semibold transition">Ras Kucing</a>
+      <a href="#about" class="nav-link font-semibold transition">Tentang</a>
       <a href="#contact" class="nav-link font-semibold transition">Kontak</a>
       <button onclick="toggleTheme()" class="ml-4 px-3 py-1 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-200 dark:hover:bg-blue-800 transition">
         <span id="theme-icon">🌙</span>
       </button>
     </div>
+    <!-- Mobile Hamburger -->
+    <div class="md:hidden flex items-center">
+      <button id="hamburger-btn" class="focus:outline-none">
+        <svg class="w-8 h-8 text-blue-700 dark:text-blue-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
   </nav>
+
+  <!-- Mobile Sidebar -->
+  <div id="mobile-sidebar" class="fixed inset-0 z-50 bg-black bg-opacity-40 hidden">
+    <div class="fixed top-0 left-0 h-full w-64 bg-white dark:bg-gray-900 shadow-lg flex flex-col p-8 space-y-6 transition-transform duration-300 transform -translate-x-full" id="sidebar-panel">
+      <div class="flex items-center justify-between mb-8">
+        <span class="font-bold text-xl tracking-wide text-blue-700 dark:text-blue-300">Menu</span>
+        <button id="close-sidebar" class="text-2xl text-gray-500 hover:text-red-500">&times;</button>
+      </div>
+      <a href="#" class="nav-link font-semibold transition" onclick="closeSidebar()">Beranda</a>
+      <a href="#breeds" class="nav-link font-semibold transition" onclick="closeSidebar()">Ras Kucing</a>
+      <a href="#about" class="nav-link font-semibold transition" onclick="closeSidebar()">Tentang</a>
+      <a href="#contact" class="nav-link font-semibold transition" onclick="closeSidebar()">Kontak</a>
+      <button onclick="toggleTheme();closeSidebar()" class="mt-8 px-3 py-1 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-200 dark:hover:bg-blue-800 transition">
+        <span id="theme-icon-mobile">🌙</span>
+      </button>
+    </div>
+  </div>
 
   <!-- Hero Section -->
   <section class="flex flex-col items-center justify-center pt-32 pb-16 text-center">
@@ -437,6 +463,38 @@
         });
       }
     });
+
+    // Sidebar mobile navbar
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const mobileSidebar = document.getElementById('mobile-sidebar');
+    const sidebarPanel = document.getElementById('sidebar-panel');
+    const closeSidebarBtn = document.getElementById('close-sidebar');
+
+    function openSidebar() {
+      mobileSidebar.classList.remove('hidden');
+      setTimeout(() => {
+        sidebarPanel.classList.remove('-translate-x-full');
+      }, 10);
+      document.body.classList.add('overflow-hidden');
+      // Sync dark mode icon
+      document.getElementById('theme-icon-mobile').textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
+    }
+    function closeSidebar() {
+      sidebarPanel.classList.add('-translate-x-full');
+      setTimeout(() => {
+        mobileSidebar.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+      }, 300);
+    }
+    hamburgerBtn.addEventListener('click', openSidebar);
+    closeSidebarBtn.addEventListener('click', closeSidebar);
+    mobileSidebar.addEventListener('click', function(e) {
+      if (e.target === mobileSidebar) closeSidebar();
+    });
+
+    // Sync dark mode icon in sidebar
+    document.querySelector('button[onclick*="toggleTheme()"]').addEventListener('click', setThemeIcon);
+    document.getElementById('theme-icon-mobile').addEventListener('click', setThemeIcon);
   </script>
 </body>
 </html>
