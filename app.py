@@ -10,9 +10,9 @@ app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
 # Load model and label encoder
-model = load_model('saved_model_new.keras')
+model = load_model('saved_model_new1.keras')
 label_encoder = LabelEncoder()
-label_encoder.classes_ = np.load('classes_new.npy')
+label_encoder.classes_ = np.load('classes_new1.npy')
 
 def preprocess_image(img_path):
     try:
@@ -65,7 +65,5 @@ def index():
 
     return render_template('index.html')
 
-if __name__ == "__main__":
-    import os
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+if __name__ == '__main__':
+    app.run(debug=True)

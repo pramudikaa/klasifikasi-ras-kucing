@@ -1,4 +1,4 @@
-# pakek fine tunning cok
+# Gak pakek fine tuning
 
 import os
 import numpy as np
@@ -43,7 +43,7 @@ val_generator = val_datagen.flow_from_directory(
 )
 
 # Simpan label encoder (kelas)
-np.save('classes_new1.npy', list(train_generator.class_indices.keys()))
+np.save('classes_new2.npy', list(train_generator.class_indices.keys()))
 
 # Transfer Learning dengan MobileNetV2
 base_model = MobileNetV2(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
@@ -64,41 +64,37 @@ model.compile(
     metrics=['accuracy']
 )
 
+early_stop = EarlyStopping(patience=10, restore_best_weights=True, verbose=1)
 reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.3, patience=5, verbose=1)
 
-print("[INFO] Training model with transfer learning (head only)...")
+print("[INFO] Training model with transfer learning...")
 history = model.fit(
     train_generator,
-    epochs=50,
+    epochs=100,
     validation_data=val_generator,
-    callbacks=[reduce_lr]
-)
-
-# FINE-TUNING: Unfreeze beberapa layer terakhir MobileNetV2
-base_model.trainable = True
-for layer in base_model.layers[:-30]:
-    layer.trainable = False
-
-model.compile(
-    optimizer=RMSprop(learning_rate=1e-5),
-    loss='categorical_crossentropy',
-    metrics=['accuracy']
-)
-
-print("[INFO] Fine-tuning model...")
-history_finetune = model.fit(
-    train_generator,
-    epochs=50,
-    validation_data=val_generator,
-    callbacks=[reduce_lr]
+    callbacks=[ reduce_lr]
 )
 
 loss, accuracy = model.evaluate(val_generator)
 print(f"[RESULT] Test Accuracy: {accuracy * 100:.2f}%")
 
-model.save('saved_model_new.keras')
+model.save('saved_model_new2.keras')
 print("[INFO] Model saved as 'saved_model.keras'")
 
-print(model.summary())
+acc = history.history['accuracy']
+val_acc = history.history['val_accuracy']
+loss = history.history['loss']
+val_loss = history.history['val_loss']
 
+epochs = range(len(acc))
 
+plt.plot(epochs, acc, 'r', label='Training accuracy')
+plt.plot(epochs, val_acc, 'b', label='Validation accuracy')
+plt.title('Training and validation accuracy')
+plt.legend()
+plt.figure()
+plt.plot(epochs, loss, 'r', label='Training loss')
+plt.plot(epochs, val_loss, 'b', label='Validation loss')
+plt.title('Training and validation loss')
+plt.legend()
+plt.show()
