@@ -10,15 +10,15 @@ app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
 # Load model and label encoder
-model = load_model('saved_model_new.keras')
+model = load_model('saved_model_new4.keras')
 label_encoder = LabelEncoder()
-label_encoder.classes_ = np.load('classes_new.npy')
+label_encoder.classes_ = np.load('classes_new4.npy')
 
 def preprocess_image(img_path):
     try:
         img = cv2.imread(img_path)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # pastikan RGB
-        img = cv2.resize(img, (224, 224))           # resize sesuai training
+        img = cv2.resize(img, (299, 299))           # resize sesuai training
         img = np.expand_dims(img, axis=0)           # tambah batch dimensi
         img = preprocess_input(img)                 # preprocessing MobileNetV2
         return img
